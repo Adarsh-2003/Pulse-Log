@@ -32,7 +32,7 @@ export function MonthYearPicker({ year, month, onChange }: Props) {
       <select
         value={month}
         onChange={(e) => onChange(year, Number(e.target.value))}
-        className="rounded-lg border border-white/15 bg-surface-muted px-3 py-2 text-sm text-zinc-100 light:border-zinc-300 light:bg-white light:text-zinc-900"
+        className="rounded-lg border border-white/15 bg-surface-muted px-3 py-2 pr-9 text-sm text-zinc-100 light:border-zinc-300 light:bg-white light:text-zinc-900"
       >
         {months.map((name, i) => (
           <option key={name} value={i + 1}>
@@ -43,7 +43,7 @@ export function MonthYearPicker({ year, month, onChange }: Props) {
       <select
         value={year}
         onChange={(e) => onChange(Number(e.target.value), month)}
-        className="rounded-lg border border-white/15 bg-surface-muted px-3 py-2 text-sm text-zinc-100 light:border-zinc-300 light:bg-white light:text-zinc-900"
+        className="rounded-lg border border-white/15 bg-surface-muted px-3 py-2 pr-9 text-sm text-zinc-100 light:border-zinc-300 light:bg-white light:text-zinc-900"
       >
         {years.map((y) => (
           <option key={y} value={y}>

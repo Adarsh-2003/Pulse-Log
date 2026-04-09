@@ -56,7 +56,7 @@ export function WorkoutHeatmap({ year, days, todayISO }: Props) {
   return (
     <div className="w-full overflow-x-auto">
       <p className="mb-3 text-xs text-zinc-500 light:text-zinc-600">
-        Workout consistency — {year} (full year)
+        Workouts - {year}
       </p>
       <div className="inline-flex min-w-full flex-col gap-2">
         <div className="grid grid-cols-12 gap-2 text-[10px] text-zinc-500 light:text-zinc-600">
