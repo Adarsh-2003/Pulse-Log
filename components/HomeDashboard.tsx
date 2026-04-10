@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useState } from "react";
 import { MonthYearPicker } from "./MonthYearPicker";
+import { MonthlyTrainingCarousel } from "./MonthlyTrainingCarousel";
 import { WorkoutHeatmap } from "./WorkoutHeatmap";
 import { AnalyticsCharts, type SeriesRow } from "./AnalyticsCharts";
 
@@ -21,6 +22,7 @@ function pickQuote() {
 type AnalyticsRes = {
   hasData: boolean;
   series: SeriesRow[];
+  trainingLogs: { date: string; text: string }[];
   heatmap: { year: number; days: { date: string; count: number }[] };
   today: string;
 };
@@ -93,12 +95,18 @@ export function HomeDashboard() {
         <h1 className="text-3xl font-semibold text-zinc-100 light:text-zinc-900 md:text-4xl">
           Welcome Adarsh
         </h1>
-        <p className="mt-2 text-sm text-zinc-400 light:text-zinc-600">
-          {todaySubmitted == null
-            ? "Checking today's logs..."
-            : todaySubmitted
-              ? "Logs submitted!"
-              : "Logs have been not added for today"}
+        <p className="mt-2 flex items-center justify-center gap-2 text-sm text-zinc-400 light:text-zinc-600">
+          <span
+            className="status-dot inline-block h-2 w-2 shrink-0 rounded-full bg-accent"
+            aria-hidden
+          />
+          <span>
+            {todaySubmitted == null
+              ? "Checking today's logs..."
+              : todaySubmitted
+                ? "Logs submitted!"
+                : "Logs have been not added for today"}
+          </span>
         </p>
       </div>
       <p className="mb-8 text-center text-lg font-medium text-zinc-300 light:text-zinc-700 md:text-xl">
@@ -147,6 +155,17 @@ export function HomeDashboard() {
       ) : (
         <AnalyticsCharts series={analyticsData.series} />
       )}
+
+      <section className="mt-14">
+        <h2 className="mb-4 text-lg font-semibold text-zinc-100 light:text-zinc-900">
+          Training notes
+        </h2>
+        {!analyticsData ? (
+          <p className="text-sm text-zinc-500">Loading…</p>
+        ) : (
+          <MonthlyTrainingCarousel logs={analyticsData.trainingLogs ?? []} />
+        )}
+      </section>
     </div>
   );
 }

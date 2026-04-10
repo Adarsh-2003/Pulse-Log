@@ -15,23 +15,38 @@ export async function GET(req: Request) {
   const { start: yearStart, end: yearEnd } = yearRangeISO(currentYear);
   const supabase = getSupabaseAdmin();
 
-  const [{ data: workouts }, { data: daily }, { data: yearWorkouts }] = await Promise.all([
-    supabase
-      .from("workouts")
-      .select("log_date")
-      .gte("log_date", start)
-      .lte("log_date", end),
-    supabase
-      .from("daily_metrics")
-      .select("log_date, sleep_hours, steps, protein_g, calories, body_weight_kg")
-      .gte("log_date", start)
-      .lte("log_date", end),
-    supabase
-      .from("workouts")
-      .select("log_date")
-      .gte("log_date", yearStart)
-      .lte("log_date", yearEnd),
-  ]);
+  const SUMMARY_PREFIX = "SUMMARY::";
+
+  const [{ data: workouts }, { data: daily }, { data: yearWorkouts }, { data: summaryRows }] =
+    await Promise.all([
+      supabase
+        .from("workouts")
+        .select("log_date")
+        .gte("log_date", start)
+        .lte("log_date", end),
+      supabase
+        .from("daily_metrics")
+        .select("log_date, sleep_hours, steps, protein_g, calories, body_weight_kg")
+        .gte("log_date", start)
+        .lte("log_date", end),
+      supabase
+        .from("workouts")
+        .select("log_date")
+        .gte("log_date", yearStart)
+        .lte("log_date", yearEnd),
+      supabase
+        .from("workouts")
+        .select("log_date, exercise_name")
+        .gte("log_date", start)
+        .lte("log_date", end)
+        .like("exercise_name", `${SUMMARY_PREFIX}%`)
+        .order("log_date", { ascending: false }),
+    ]);
+
+  const trainingLogs = (summaryRows ?? []).map((row) => ({
+    date: row.log_date as string,
+    text: String(row.exercise_name).replace(SUMMARY_PREFIX, ""),
+  }));
   const workoutRows = workouts ?? [];
   const dailyRows = (daily ?? []) as Array<{
     log_date: string;
@@ -95,6 +110,7 @@ export async function GET(req: Request) {
   return NextResponse.json({
     hasData: hasAny,
     series,
+    trainingLogs,
     heatmap: {
       year: currentYear,
       days: heatmapDays,
