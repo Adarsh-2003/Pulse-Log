@@ -1,29 +1,9 @@
 "use client";
 
 import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
 
 export function Footer() {
   const pathname = usePathname();
-  const [viewerCount, setViewerCount] = useState<number | null>(null);
-
-  useEffect(() => {
-    if (pathname === "/login") return;
-    let cancelled = false;
-    fetch("/api/viewers", { cache: "no-store" })
-      .then((r) => (r.ok ? r.json() : { count: null }))
-      .then((j) => {
-        if (!cancelled) {
-          setViewerCount(typeof j.count === "number" ? j.count : null);
-        }
-      })
-      .catch(() => {
-        if (!cancelled) setViewerCount(null);
-      });
-    return () => {
-      cancelled = true;
-    };
-  }, [pathname]);
 
   if (pathname === "/login") return null;
 
@@ -40,9 +20,6 @@ export function Footer() {
           Adarsh Gupta
         </a>{" "}
         🗿
-      </p>
-      <p className="mt-3 text-xs text-zinc-500/90 light:text-zinc-600">
-        Viewer Count : {viewerCount ?? "--"}
       </p>
     </footer>
   );
