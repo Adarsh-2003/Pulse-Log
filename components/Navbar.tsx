@@ -45,7 +45,7 @@ export function Navbar() {
           href="/"
           className="text-lg font-semibold tracking-[0.08em] text-zinc-100 transition-all duration-300 hover:tracking-[0.12em] hover:text-accent light:text-zinc-900"
         >
-          PulseLog
+          FitLog
         </Link>
         <nav className="flex items-center gap-4 text-sm">
           {links.map(({ href, label }) => (

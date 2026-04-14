@@ -1,4 +1,4 @@
-# PulseLog
+# FitLog
 
 PulseLog is a personal fitness tracker built for one user.
 
