@@ -40,6 +40,17 @@ function ChartShell({
 }
 
 export function AnalyticsCharts({ series }: { series: SeriesRow[] }) {
+  const maxSteps = series.reduce((m, row) => {
+    const v = row.steps ?? 0;
+    return v > m ? v : m;
+  }, 0);
+  const stepsUpper = Math.max(8000, Math.ceil((maxSteps + 500) / 2000) * 2000);
+  const stepsTickStep = stepsUpper > 14000 ? 4000 : 2000;
+  const stepsTicks: number[] = [];
+  for (let v = 0; v <= stepsUpper; v += stepsTickStep) {
+    stepsTicks.push(v);
+  }
+
   return (
     <div className="flex flex-col gap-10">
       <ChartShell title="Sleep (hours)">
@@ -47,7 +58,12 @@ export function AnalyticsCharts({ series }: { series: SeriesRow[] }) {
           <LineChart data={series} margin={{ top: 8, right: 8, left: 0, bottom: 0 }}>
             <CartesianGrid className={grid} strokeDasharray="3 3" />
             <XAxis dataKey="dayLabel" tick={{ className: axis }} />
-            <YAxis tick={{ className: axis }} width={36} />
+            <YAxis
+              tick={{ className: axis }}
+              width={36}
+              domain={[0, 10]}
+              ticks={[0, 2, 4, 6, 8, 10]}
+            />
             <Tooltip
               contentStyle={tipStyle}
               labelFormatter={(_, p) => (p?.[0]?.payload as SeriesRow)?.date ?? ""}
@@ -70,7 +86,14 @@ export function AnalyticsCharts({ series }: { series: SeriesRow[] }) {
           <LineChart data={series} margin={{ top: 8, right: 8, left: 0, bottom: 0 }}>
             <CartesianGrid className={grid} strokeDasharray="3 3" />
             <XAxis dataKey="dayLabel" tick={{ className: axis }} />
-            <YAxis tick={{ className: axis }} width={44} />
+            <YAxis
+              tick={{ className: axis }}
+              width={60}
+              domain={[0, stepsUpper]}
+              ticks={stepsTicks}
+              interval={0}
+              tickFormatter={(v: number) => `${v}`}
+            />
             <Tooltip
               contentStyle={tipStyle}
               labelFormatter={(_, p) => (p?.[0]?.payload as SeriesRow)?.date ?? ""}
@@ -116,7 +139,12 @@ export function AnalyticsCharts({ series }: { series: SeriesRow[] }) {
           <LineChart data={series} margin={{ top: 8, right: 8, left: 0, bottom: 0 }}>
             <CartesianGrid className={grid} strokeDasharray="3 3" />
             <XAxis dataKey="dayLabel" tick={{ className: axis }} />
-            <YAxis tick={{ className: axis }} width={44} />
+            <YAxis
+              tick={{ className: axis }}
+              width={44}
+              domain={[1600, 3400]}
+              ticks={[1600, 1900, 2200, 2500, 2800, 3100, 3400]}
+            />
             <Tooltip
               contentStyle={tipStyle}
               labelFormatter={(_, p) => (p?.[0]?.payload as SeriesRow)?.date ?? ""}
