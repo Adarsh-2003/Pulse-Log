@@ -12,7 +12,7 @@ export function Footer() {
       <p>
         Vibe coded with fun by{" "}
         <a
-          href="https://adarshgupta.works"
+          href="https://gupta-adarsh.vercel.app/"
           target="_blank"
           rel="noopener noreferrer"
           className="text-inherit underline underline-offset-2"
